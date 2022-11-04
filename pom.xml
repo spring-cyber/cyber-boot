@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>io.github.spring-cyber</groupId>
-    <artifactId>cyber-boot</artifactId>
+    <artifactId>cyber-web</artifactId>
     <version>0.0.1</version>
 
-    <name>cyber-boot</name>
+    <name>cyber-web</name>
     <url>https://github.com/spring-cyber</url>
     <description>Cyber Boot Project</description>
 
@@ -56,16 +56,16 @@
 
     <scm>
         <tag>cyber-boot</tag>
-        <url>https://github.com/spring-cyber/cyber-boot</url>
-        <connection>scm:git:https://github.com/spring-cyber/cyber-boot.git</connection>
-        <developerConnection>scm:git:https://github.com/spring-cyber/cyber-boot.git</developerConnection>
+        <url>https://github.com/spring-cyber/cyber-web</url>
+        <connection>scm:git:https://github.com/spring-cyber/cyber-web.git</connection>
+        <developerConnection>scm:git:https://github.com/spring-cyber/cyber-web.git</developerConnection>
     </scm>
 
     <dependencies>
         <dependency>
-            <groupId>com.cyber</groupId>
+            <groupId>io.github.spring-cyber</groupId>
             <artifactId>cyber-core</artifactId>
-            <version>${cyber.version}</version>
+            <version>0.0.1</version>
         </dependency>
 
         <dependency>

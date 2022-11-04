@@ -1,7 +1,7 @@
 package com.cyber.utils;
 
 import com.alibaba.fastjson.JSON;
-import com.cyber.constant.Constant;
+import com.cyber.constant.ResultCode;
 import com.cyber.entity.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class Responses {
         }
     }
 
-    public static final void response(HttpServletResponse response, Constant.ResultCode resultCode) {
+    public static final void response(HttpServletResponse response, ResultCode resultCode) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = null;
@@ -38,8 +38,8 @@ public class Responses {
             out = response.getWriter();
 
             Response result = new Response();
-            result.setCode(resultCode.getStatusCode());
-            response.setStatus(resultCode.getStatusCode());
+            result.setCode(resultCode.getCode());
+            response.setStatus(resultCode.getCode());
             out.append(JSON.toJSONString(result));
         } catch (IOException e) {
             LOGGER.error("repsonse with json error", e);

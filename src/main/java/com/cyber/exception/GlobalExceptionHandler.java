@@ -1,6 +1,7 @@
 package com.cyber.exception;
 
-import com.cyber.constant.Constant;
+import com.cyber.constant.HttpResultCode;
+import com.cyber.constant.ResultCode;
 import com.cyber.entity.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,74 +25,74 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {MissingServletRequestParameterException.class})
     public Response missingServletRequestParameterException(MissingServletRequestParameterException exception) {
         LOGGING.error("missing servlet request parameter exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.PARAM_ERROR);
+        return Response.fail(HttpResultCode.PARAM_ERROR);
     }
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public Response argumentNotValidException(MethodArgumentNotValidException exception) {
         LOGGING.error("method argument not valid exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.VALIDATE_ERROR.getStatusCode(), exception.getBindingResult().getFieldError().getDefaultMessage());
+        return Response.fail(HttpResultCode.VALIDATE_ERROR.getCode(), exception.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     @ExceptionHandler(value = {BindException.class})
     public Response bindException(BindException exception) {
         LOGGING.error("bind exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.VALIDATE_ERROR.getStatusCode(), exception.getBindingResult().getFieldError().getDefaultMessage());
+        return Response.fail(HttpResultCode.VALIDATE_ERROR.getCode(), exception.getBindingResult().getFieldError().getDefaultMessage());
     }
 
     @ExceptionHandler(value = {UnexpectedTypeException.class})
     public Response unexpectedTypeException(UnexpectedTypeException exception) {
         LOGGING.error("unexpected type exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.VALIDATE_ERROR);
+        return Response.fail(HttpResultCode.VALIDATE_ERROR);
     }
 
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     public Response methodNotSupportedException(HttpRequestMethodNotSupportedException exception) {
         LOGGING.error("http request method not supported exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.REST_METHOD_NOT_SUPPORT);
+        return Response.fail(HttpResultCode.REST_METHOD_NOT_SUPPORT);
     }
 
     @ExceptionHandler(value = {MultipartException.class})
     public Response uploadFileLimitException(MultipartException exception) {
         LOGGING.error("upload file limit exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.FILE_UPLOAD_ERROR);
+        return Response.fail(HttpResultCode.FILE_UPLOAD_ERROR);
     }
 
     @ExceptionHandler(value = {DuplicateKeyException.class})
     public Response duplicateKeyException(DuplicateKeyException exception) {
         LOGGING.error("duplicate key exception {} ...", exception);
-        return Response.fail(Constant.ResultCode.BAD_SQL_ERROR);
+        return Response.fail(HttpResultCode.BAD_SQL_ERROR);
     }
 
     @ExceptionHandler(value = {SQLException.class})
     public Response sqlException(DuplicateKeyException exception) {
         LOGGING.error("sql exception {} ... ", exception);
-        return Response.fail(Constant.ResultCode.BAD_SQL_ERROR);
+        return Response.fail(HttpResultCode.BAD_SQL_ERROR);
     }
 
     @ExceptionHandler(value = {BusinessException.class})
     public Response businessException(BusinessException exception) {
         LOGGING.error("business exception {} ... ", exception);
-        return Response.fail(Constant.ResultCode.SERVER_ERROR);
+        return Response.fail(HttpResultCode.SERVER_ERROR);
     }
 
     @ExceptionHandler(value = {SystemException.class})
     public Response systemException(SystemException exception) {
         LOGGING.error("system exception {} ... ", exception);
-        return Response.fail(Constant.ResultCode.SERVER_ERROR);
+        return Response.fail(HttpResultCode.SERVER_ERROR);
     }
 
     @ExceptionHandler(value = {Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response exception(Exception exception) {
         LOGGING.error("exception {} ... ", exception);
-        return Response.fail(Constant.ResultCode.SERVER_ERROR);
+        return Response.fail(HttpResultCode.SERVER_ERROR);
     }
 
     @ExceptionHandler(value = {Throwable.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response throwable(Throwable throwable) {
         LOGGING.error("throwable {} ... ", throwable);
-        return Response.fail(Constant.ResultCode.SERVER_ERROR);
+        return Response.fail(HttpResultCode.SERVER_ERROR);
     }
 }

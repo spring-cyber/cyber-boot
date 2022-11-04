@@ -1,22 +1,30 @@
 package com.cyber.entity;
 
-import com.cyber.constant.Constant;
+import com.cyber.constant.ResultCode;
+
+import java.time.Instant;
+import java.time.ZonedDateTime;
 
 public class Response extends Entity {
+    private int code = 0;
+    private String message = "Success";
 
-    private int code;
+    private final Instant time;
 
-    private String message;
 
-    public Response() { }
+    public Response() {
+        this.time = ZonedDateTime.now().toInstant();
+    }
 
     public Response(int code) {
         this.code = code;
+        this.time = ZonedDateTime.now().toInstant();
     }
 
     public Response(int code, String message) {
         this.code = code;
         this.message = message;
+        this.time = ZonedDateTime.now().toInstant();
     }
 
     public int getCode() {
@@ -48,8 +56,8 @@ public class Response extends Entity {
     }
 
 
-    public static Response fail(Constant.ResultCode resultCode) {
-        return new Response(resultCode.getStatusCode(), resultCode.getStatusMessage());
+    public static Response fail(ResultCode resultCode) {
+        return new Response(resultCode.getCode(), resultCode.getMessage());
     }
 
 }

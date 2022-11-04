@@ -1,7 +1,10 @@
 package com.cyber.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class DataResponse<T> extends Response {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public DataResponse() {
