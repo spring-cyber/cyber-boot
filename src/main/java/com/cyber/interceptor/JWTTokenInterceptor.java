@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.WebUtils;
 
@@ -28,31 +29,23 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTTokenInterceptor.class);
     private static final String BASIC_JWT_TOKEN_PREFIX = "Basic ";
 
-    Cache<String, JWTToken> tokenCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
-
+    Cache<String, String> jwtTokenStringCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
+    Cache<String, JWTToken> jwtTokenCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        JWTToken<JSONObject> jwtToken = checkJWTToken(request);
-        if(null != jwtToken) {
-            LOGGER.debug("Get [X_CLIENT_JWT_TOKEN] From HttpServletRequest ... ");
-            ThreadLocals.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtToken);
+        if(checkJWTToken(request)) {
+            LOGGER.debug("JWTToken Interceptor, check JWTToken Success ... ");
             return true;
         }
 
+        LOGGER.debug("JWTToken Interceptor, check JWTToken Fail ... ");
 
-        jwtToken = checkToken(request,response);
-        if(null != jwtToken) {
-            LOGGER.debug("Get [X_CLIENT_TOKEN] From HttpServletRequest ... ");
-            ThreadLocals.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtToken);
-            return true;
-        }
-        LOGGER.debug("Get [X_CLIENT_TOKEN] From HttpServletRequest,But Empty ...");
         return false;
     }
 
 
 
-    public JWTToken<JSONObject> checkJWTToken(HttpServletRequest request) {
+    public boolean checkJWTToken(HttpServletRequest request) {
         String jwtTokenString = null;
         Cookie tokenCookie = WebUtils.getCookie(request, JWTTokenKey.X_CLIENT_JWT_TOKEN);
         if (tokenCookie != null) {
@@ -67,14 +60,38 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
 
         if(StringUtils.isEmpty(jwtTokenString)) {
             LOGGER.info("Get [X_CLIENT_JWT_TOKEN] From HttpServletRequest,But Empty ... ");
-            return null;
+            return false;
         }
 
         if (jwtTokenString.startsWith(BASIC_JWT_TOKEN_PREFIX)) {
             jwtTokenString = jwtTokenString.substring(BASIC_JWT_TOKEN_PREFIX.length());
         }
 
-        return claim2Token(jwtTokenString);
+        String jwtTokenLocal = jwtTokenStringCache.getIfPresent(JWTTokenKey.X_CLIENT_JWT_TOKEN);
+        JWTToken<JSONObject> jwtTokenUser = null;
+        if(StringUtils.isNoneEmpty(jwtTokenLocal)) {
+            if(jwtTokenLocal.equals(jwtTokenString)) {
+                jwtTokenUser = jwtTokenCache.getIfPresent(JWTTokenKey.X_CLIENT_TOKEN_USER);
+                if(jwtTokenUser != null) {
+                    LOGGER.info("Get [X_CLIENT_TOKEN_USER] From Local Cache ... ");
+                    ThreadLocals.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
+                    return true;
+                }
+                LOGGER.info("Get [X_CLIENT_TOKEN_USER] From Local Cache, But Empty ... ");
+            }
+        }
+        jwtTokenUser = claim2Token(jwtTokenString);
+        if(jwtTokenUser == null) {
+            LOGGER.info("Get [X_CLIENT_TOKEN_USER] From jwtToken String ... ");
+            return false;
+        }
+
+
+        jwtTokenStringCache.put(JWTTokenKey.X_CLIENT_JWT_TOKEN,jwtTokenString);
+        jwtTokenCache.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
+
+        ThreadLocals.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
+        return true;
     }
 
     @Value("${acl.jwt.secret:ABCDEFGHIJKLMNOPQRSTUVMXYZABCDEFGHIJKLMNOPQRSTUVMXYZABCDEFGHIJKLMNOPQRSTUVMXYZABCDEFGHIJKLMNOPQRSTUVMXYZ}")
@@ -120,33 +137,6 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
         } catch (Exception exception) {
             LOGGER.error("Get Token From Claims, But Exception... ");
         }
-        return token;
-    }
-
-    public JWTToken<JSONObject> checkToken(HttpServletRequest request, HttpServletResponse response) {
-        String tokenKey = null;
-        Cookie tokenCookie = WebUtils.getCookie(request, JWTTokenKey.X_CLIENT_TOKEN);
-        if (tokenCookie != null) {
-            tokenKey = tokenCookie.getValue();
-        }
-        if (StringUtils.isEmpty(tokenKey)) {
-            tokenKey = request.getHeader(JWTTokenKey.X_CLIENT_TOKEN);
-        }
-        if (StringUtils.isEmpty(tokenKey)) {
-            LOGGER.debug("Get [X_CLIENT_TOKEN] From HttpServletRequest Cookie & Header,But Empty... ");
-
-
-            return null;
-        }
-
-        JWTToken<JSONObject> token = tokenCache.getIfPresent(tokenKey);
-        if (token == null) {
-
-            //redis
-        } else {
-            LOGGER.info("Check Token {} In Local Cache... ", tokenKey);
-        }
-
         return token;
     }
 

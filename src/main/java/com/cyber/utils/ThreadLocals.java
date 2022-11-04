@@ -9,7 +9,6 @@ import java.util.Map;
 public class ThreadLocals {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ThreadLocals.class);
-
     protected final static ThreadLocal<Map<String, Object>> threadContext = new MapThreadLocal();
 
     private ThreadLocals() {
