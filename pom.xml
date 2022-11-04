@@ -55,7 +55,7 @@
     </developers>
 
     <scm>
-        <tag>cyber-boot</tag>
+        <tag>cyber-web</tag>
         <url>https://github.com/spring-cyber/cyber-web</url>
         <connection>scm:git:https://github.com/spring-cyber/cyber-web.git</connection>
         <developerConnection>scm:git:https://github.com/spring-cyber/cyber-web.git</developerConnection>
