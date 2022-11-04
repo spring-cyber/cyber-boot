@@ -1,14 +1,16 @@
 package com.cyber.entity;
 
+import java.util.HashSet;
+
 public class JWTToken<T> extends IdEntity {
 
     private String sessionId;
     private String sessionName;
     private String deviceId;
-
     private String token;
-    private String jwtToken;
 
+    private HashSet<String> roles;
+    private String jwtToken;
     private T user;
 
     public String getSessionId() {
@@ -41,6 +43,14 @@ public class JWTToken<T> extends IdEntity {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public HashSet<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(HashSet<String> roles) {
+        this.roles = roles;
     }
 
     public String getJwtToken() {

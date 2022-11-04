@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.WebUtils;
 
@@ -22,6 +23,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
+import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 public class JWTTokenInterceptor implements HandlerInterceptor  {
@@ -128,6 +130,12 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
                 LOGGER.debug("Get [token] From Claims, But Empty... ");
             }
             token.setToken(tokenId);
+
+            HashSet<String> roles = claims.get("roles", HashSet.class);
+            if (CollectionUtils.isEmpty(roles)) {
+                LOGGER.debug("Get [roles] From Claims, But Empty... ");
+            }
+            token.setRoles(roles);
 
             JSONObject user = claims.get("user", JSONObject.class);
             if (user == null) {
