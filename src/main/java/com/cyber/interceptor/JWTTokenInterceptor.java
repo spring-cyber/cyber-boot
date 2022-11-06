@@ -2,8 +2,6 @@ package com.cyber.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cyber.constant.JWTTokenKey;
-import com.cyber.entity.JWTToken;
-import com.cyber.utils.ThreadLocals;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.jsonwebtoken.Claims;
@@ -13,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.WebUtils;
