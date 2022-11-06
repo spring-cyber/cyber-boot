@@ -1,5 +1,7 @@
 package com.cyber.service;
 
+import com.cyber.entity.PagingData;
+
 import java.util.List;
 
 public interface BaseService<T> {
