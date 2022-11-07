@@ -1,4 +1,4 @@
-package com.cyber.mapper;
+package com.cyber.infrastructure.repository;
 import java.util.List;
 
 public interface BaseMapper<T> {

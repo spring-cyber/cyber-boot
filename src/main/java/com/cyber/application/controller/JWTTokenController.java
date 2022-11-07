@@ -1,9 +1,9 @@
-package com.cyber.controller;
+package com.cyber.application.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cyber.constant.JWTTokenKey;
-import com.cyber.entity.JWTToken;
-import com.cyber.utils.ThreadLocals;
+import com.cyber.domain.constant.JWTTokenKey;
+import com.cyber.domain.entity.JWTToken;
+import com.cyber.infrastructure.toolkit.ThreadLocals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ public class JWTTokenController {
 
     protected JWTToken<JSONObject> getThreadLocalToken() {
         if(ThreadLocals.get(JWTTokenKey.X_CLIENT_TOKEN_USER) != null) {
-            JWTToken<JSONObject> token = (JWTToken<JSONObject>)ThreadLocals.get(JWTTokenKey.X_CLIENT_TOKEN_USER);
+            JWTToken<JSONObject> token = (JWTToken<JSONObject>) ThreadLocals.get(JWTTokenKey.X_CLIENT_TOKEN_USER);
             return token;
         }
         LOGGING.debug("Get Token Form ThreadLocal,But Is Empty ...");

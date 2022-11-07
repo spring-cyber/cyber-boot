@@ -1,9 +1,9 @@
-package com.cyber.interceptor;
+package com.cyber.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cyber.constant.JWTTokenKey;
-import com.cyber.entity.JWTToken;
-import com.cyber.utils.ThreadLocals;
+import com.cyber.domain.constant.JWTTokenKey;
+import com.cyber.domain.entity.JWTToken;
+import com.cyber.infrastructure.toolkit.ThreadLocals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpRequest;

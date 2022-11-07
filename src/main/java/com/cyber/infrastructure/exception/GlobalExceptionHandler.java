@@ -1,7 +1,9 @@
-package com.cyber.exception;
+package com.cyber.infrastructure.exception;
 
-import com.cyber.constant.HttpResultCode;
-import com.cyber.entity.Response;
+import com.cyber.domain.constant.HttpResultCode;
+import com.cyber.domain.entity.Response;
+import com.cyber.domain.exception.BusinessException;
+import com.cyber.domain.exception.SystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

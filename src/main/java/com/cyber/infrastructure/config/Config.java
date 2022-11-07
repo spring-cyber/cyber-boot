@@ -1,7 +1,6 @@
 
-package com.cyber.config;
+package com.cyber.infrastructure.config;
 
-import com.cyber.interceptor.JWTTokenInterceptor;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -18,18 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
-import javax.net.ssl.*;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class Config  {

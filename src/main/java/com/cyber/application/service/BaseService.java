@@ -1,6 +1,6 @@
-package com.cyber.service;
+package com.cyber.application.service;
 
-import com.cyber.entity.PagingData;
+import com.cyber.domain.entity.PagingData;
 
 import java.util.List;
 

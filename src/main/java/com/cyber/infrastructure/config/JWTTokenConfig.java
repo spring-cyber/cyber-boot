@@ -1,7 +1,7 @@
-package com.cyber.config;
+package com.cyber.infrastructure.config;
 
-import com.cyber.interceptor.RestClientInterceptor;
-import com.cyber.interceptor.JWTTokenInterceptor;
+import com.cyber.infrastructure.interceptor.RestClientInterceptor;
+import com.cyber.infrastructure.interceptor.JWTTokenInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

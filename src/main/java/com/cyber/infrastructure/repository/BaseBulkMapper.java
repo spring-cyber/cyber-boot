@@ -1,8 +1,7 @@
-package com.cyber.service;
-
+package com.cyber.infrastructure.repository;
 import java.util.List;
 
-public interface BaseBulkService<T> {
+public interface BaseBulkMapper<T> {
 
     Integer bulkSave(List<T> tList);
 
