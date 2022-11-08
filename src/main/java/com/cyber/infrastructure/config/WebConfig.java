@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
+import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 @Configuration
-public class Config  {
+public class WebConfig  {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
     @Autowired
-    okhttp3.OkHttpClient okHttpClient;
+    OkHttpClient okHttpClient;
 
     @Bean
     public RestTemplate restTemplate() {

@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.WebUtils;
@@ -25,6 +26,7 @@ import java.security.Key;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
+@Component
 public class JWTTokenInterceptor implements HandlerInterceptor  {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JWTTokenInterceptor.class);

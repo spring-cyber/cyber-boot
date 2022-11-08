@@ -11,9 +11,11 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class RestClientInterceptor implements ClientHttpRequestInterceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestClientInterceptor.class);
 

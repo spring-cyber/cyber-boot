@@ -20,6 +20,7 @@ public class JWTTokenConfig implements WebMvcConfigurer {
 
     @Autowired
     JWTTokenInterceptor tokenInterceptor;
+
     @Autowired
     RestClientInterceptor httpRequestInterceptor;
 
