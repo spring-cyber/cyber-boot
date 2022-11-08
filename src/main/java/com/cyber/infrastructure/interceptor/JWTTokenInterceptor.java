@@ -1,8 +1,10 @@
 package com.cyber.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cyber.domain.constant.HttpResultCode;
 import com.cyber.domain.constant.JWTTokenKey;
 import com.cyber.domain.entity.JWTToken;
+import com.cyber.infrastructure.toolkit.Responses;
 import com.cyber.infrastructure.toolkit.ThreadLocals;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -36,7 +38,7 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
     Cache<String, JWTToken> jwtTokenCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(checkJWTToken(request)) {
+        if(checkJWTToken(request,response)) {
             LOGGER.debug("JWTToken Interceptor, check JWTToken Success ... ");
             return true;
         }
@@ -48,7 +50,7 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
 
 
 
-    public boolean checkJWTToken(HttpServletRequest request) {
+    public boolean checkJWTToken(HttpServletRequest request, HttpServletResponse response) {
         String jwtTokenString = null;
         Cookie tokenCookie = WebUtils.getCookie(request, JWTTokenKey.X_CLIENT_JWT_TOKEN);
         if (tokenCookie != null) {
@@ -63,6 +65,7 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
 
         if(StringUtils.isEmpty(jwtTokenString)) {
             LOGGER.info("Get [X_CLIENT_JWT_TOKEN] From HttpServletRequest,But Empty ... ");
+            Responses.response(response, HttpResultCode.BAD_AUTH);
             return false;
         }
 
@@ -86,6 +89,7 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
         jwtTokenUser = claim2Token(jwtTokenString);
         if(jwtTokenUser == null) {
             LOGGER.info("Get [X_CLIENT_TOKEN_USER] From jwtToken String ... ");
+            Responses.response(response, HttpResultCode.SERVER_ERROR);
             return false;
         }
 
