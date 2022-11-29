@@ -1,9 +1,9 @@
 package com.cyber.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cyber.domain.constant.AuthingTokenKey;
 import com.cyber.domain.constant.HttpResultCode;
-import com.cyber.domain.constant.JWTTokenKey;
-import com.cyber.domain.entity.JWTToken;
+import com.cyber.domain.entity.AuthingToken;
 import com.cyber.infrastructure.toolkit.Responses;
 import com.cyber.infrastructure.toolkit.ThreadLocals;
 import com.google.common.cache.Cache;
@@ -29,16 +29,16 @@ import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class JWTTokenInterceptor implements HandlerInterceptor  {
+public class AuthingTokenInterceptor implements HandlerInterceptor  {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JWTTokenInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthingTokenInterceptor.class);
     private static final String BASIC_JWT_TOKEN_PREFIX = "Basic ";
 
     Cache<String, String> jwtTokenStringCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
-    Cache<String, JWTToken> jwtTokenCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
+    Cache<String, AuthingToken> jwtTokenCache = CacheBuilder.newBuilder().maximumSize(2).expireAfterWrite(5, TimeUnit.MINUTES).build();
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if(checkJWTToken(request,response)) {
+        if(checkAuthingToken(request,response)) {
             LOGGER.debug("JWTToken Interceptor, check JWTToken Success ... ");
             return true;
         }
@@ -50,9 +50,9 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
 
 
 
-    public boolean checkJWTToken(HttpServletRequest request, HttpServletResponse response) {
+    public boolean checkAuthingToken(HttpServletRequest request, HttpServletResponse response) {
         String jwtTokenString = null;
-        Cookie tokenCookie = WebUtils.getCookie(request, JWTTokenKey.X_CLIENT_JWT_TOKEN);
+        Cookie tokenCookie = WebUtils.getCookie(request, AuthingTokenKey.X_CLIENT_JWT_TOKEN);
         if (tokenCookie != null) {
             LOGGER.debug("Get [X_CLIENT_JWT_TOKEN] From HttpServletRequest Cookie ... ");
             jwtTokenString = tokenCookie.getValue();
@@ -60,7 +60,7 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
 
         if(StringUtils.isEmpty(jwtTokenString)) {
             LOGGER.debug("Get [X_CLIENT_JWT_TOKEN] From HttpServletRequest Header ... ");
-            jwtTokenString = request.getHeader(JWTTokenKey.X_CLIENT_JWT_TOKEN);
+            jwtTokenString = request.getHeader(AuthingTokenKey.X_CLIENT_JWT_TOKEN);
         }
 
         if(StringUtils.isEmpty(jwtTokenString)) {
@@ -73,14 +73,14 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
             jwtTokenString = jwtTokenString.substring(BASIC_JWT_TOKEN_PREFIX.length());
         }
 
-        String jwtTokenLocal = jwtTokenStringCache.getIfPresent(JWTTokenKey.X_CLIENT_JWT_TOKEN);
-        JWTToken<JSONObject> jwtTokenUser = null;
+        String jwtTokenLocal = jwtTokenStringCache.getIfPresent(AuthingTokenKey.X_CLIENT_JWT_TOKEN);
+        AuthingToken<JSONObject> jwtTokenUser = null;
         if(StringUtils.isNoneEmpty(jwtTokenLocal)) {
             if(jwtTokenLocal.equals(jwtTokenString)) {
-                jwtTokenUser = jwtTokenCache.getIfPresent(JWTTokenKey.X_CLIENT_TOKEN_USER);
+                jwtTokenUser = jwtTokenCache.getIfPresent(AuthingTokenKey.X_CLIENT_TOKEN_USER);
                 if(jwtTokenUser != null) {
                     LOGGER.info("Get [X_CLIENT_TOKEN_USER] From Local Cache ... ");
-                    ThreadLocals.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
+                    ThreadLocals.put(AuthingTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
                     return true;
                 }
                 LOGGER.info("Get [X_CLIENT_TOKEN_USER] From Local Cache, But Empty ... ");
@@ -94,20 +94,20 @@ public class JWTTokenInterceptor implements HandlerInterceptor  {
         }
 
 
-        jwtTokenStringCache.put(JWTTokenKey.X_CLIENT_JWT_TOKEN,jwtTokenString);
-        jwtTokenCache.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
+        jwtTokenStringCache.put(AuthingTokenKey.X_CLIENT_JWT_TOKEN,jwtTokenString);
+        jwtTokenCache.put(AuthingTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
 
-        ThreadLocals.put(JWTTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
+        ThreadLocals.put(AuthingTokenKey.X_CLIENT_TOKEN_USER, jwtTokenUser);
         return true;
     }
 
     @Value("${acl.jwt.secret:ABCDEFGHIJKLMNOPQRSTUVMXYZABCDEFGHIJKLMNOPQRSTUVMXYZABCDEFGHIJKLMNOPQRSTUVMXYZABCDEFGHIJKLMNOPQRSTUVMXYZ}")
     private String jwtSecret;
-    private JWTToken<JSONObject> claim2Token(String jwtToken) {
+    private AuthingToken<JSONObject> claim2Token(String jwtToken) {
         Key signingKey = new SecretKeySpec(jwtSecret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
         Claims claims = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(jwtToken).getBody();
 
-        JWTToken<JSONObject> token = new JWTToken<JSONObject>();
+        AuthingToken<JSONObject> token = new AuthingToken<JSONObject>();
         token.setJwtToken(jwtToken);
         try {
             String sessionId = claims.get("session_id", String.class);

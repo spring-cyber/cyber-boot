@@ -1,8 +1,8 @@
 package com.cyber.infrastructure.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cyber.domain.constant.JWTTokenKey;
-import com.cyber.domain.entity.JWTToken;
+import com.cyber.domain.constant.AuthingTokenKey;
+import com.cyber.domain.entity.AuthingToken;
 import com.cyber.infrastructure.toolkit.ThreadLocals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +22,12 @@ public class RestClientInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         try {
-            JWTToken<JSONObject> token = null;
-            if(ThreadLocals.get(JWTTokenKey.X_CLIENT_TOKEN_USER) != null) {
+            AuthingToken<JSONObject> token = null;
+            if(ThreadLocals.get(AuthingTokenKey.X_CLIENT_TOKEN_USER) != null) {
                 HttpRequestWrapper requestWrapper = new HttpRequestWrapper(request);
 
-                token =  (JWTToken<JSONObject>) ThreadLocals.get(JWTTokenKey.X_CLIENT_TOKEN_USER);
-                requestWrapper.getHeaders().set(JWTTokenKey.X_CLIENT_JWT_TOKEN,token.getJwtToken());
+                token =  (AuthingToken<JSONObject>) ThreadLocals.get(AuthingTokenKey.X_CLIENT_TOKEN_USER);
+                requestWrapper.getHeaders().set(AuthingTokenKey.X_CLIENT_JWT_TOKEN,token.getJwtToken());
 
                 return execution.execute(requestWrapper, body);
             }
