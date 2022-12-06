@@ -16,5 +16,5 @@ public interface BaseService<T> {
 
     List<T> selectByIndex(T entity);
 
-    PagingData<T> selectPage(T entity);
+    PagingData<List<T>> selectPage(T entity);
 }
