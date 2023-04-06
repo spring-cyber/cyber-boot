@@ -34,6 +34,7 @@ public class WebConfig  {
 
     @Bean
     public RestTemplate restTemplate() {
+        LOGGER.info("== restTemplate ==");
         RestTemplate restTemplate = new RestTemplate(new OkHttp3ClientHttpRequestFactory(okHttpClient));
         MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM, MediaType.parseMediaType("application/x-tar")));
@@ -49,6 +50,7 @@ public class WebConfig  {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
+        LOGGER.info("== jackson2ObjectMapperBuilderCustomizer ==");
         return jacksonObjectMapperBuilder -> {
             jacksonObjectMapperBuilder.featuresToDisable(
                     JsonGenerator.Feature.IGNORE_UNKNOWN,
