@@ -30,7 +30,7 @@ public class WebConfig  {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
 
     @Autowired
-    OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
 
     @Bean
     public RestTemplate restTemplate() {

@@ -1,7 +1,7 @@
 package com.cyber.infrastructure.config;
 
-import com.cyber.infrastructure.interceptor.RestClientInterceptor;
 import com.cyber.infrastructure.interceptor.AuthingTokenInterceptor;
+import com.cyber.infrastructure.interceptor.RestClientInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,13 +18,13 @@ import java.util.Collections;
 public class AuthingTokenInterceptorConfig implements WebMvcConfigurer {
 
     @Autowired
-    AuthingTokenInterceptor tokenInterceptor;
+    private AuthingTokenInterceptor tokenInterceptor;
 
     @Autowired
-    RestClientInterceptor httpRequestInterceptor;
+    private RestClientInterceptor httpRequestInterceptor;
 
     @Autowired
-    AuthingTokenInterceptorPathPattern pathPattern;
+    private AuthingTokenInterceptorPathPattern pathPattern;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

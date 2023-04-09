@@ -17,6 +17,7 @@ import java.io.IOException;
 
 @Component
 public class RestClientInterceptor implements ClientHttpRequestInterceptor {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RestClientInterceptor.class);
 
     @Override
