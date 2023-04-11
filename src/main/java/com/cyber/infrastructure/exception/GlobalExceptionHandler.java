@@ -4,6 +4,7 @@ import com.cyber.domain.constant.HttpResultCode;
 import com.cyber.domain.entity.Response;
 import com.cyber.domain.exception.BusinessException;
 import com.cyber.domain.exception.SystemException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -76,7 +77,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {BusinessException.class})
     public Response businessException(BusinessException exception) {
         LOGGING.error("business exception {} ... ", exception);
-        return Response.fail(exception.getCode(), exception.getMessage());
+        return Response.fail(exception.getCode() == 0 ? HttpResultCode.SERVER_ERROR.getCode() : exception.getCode(),
+                StringUtils.isBlank(exception.getMessage()) ? HttpResultCode.SERVER_ERROR.getMessage() : exception.getMessage());
     }
 
     @ExceptionHandler(value = {SystemException.class})
