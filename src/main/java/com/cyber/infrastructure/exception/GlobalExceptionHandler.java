@@ -76,7 +76,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = {BusinessException.class})
     public Response businessException(BusinessException exception) {
         LOGGING.error("business exception {} ... ", exception);
-        return Response.fail(HttpResultCode.SERVER_ERROR);
+        return Response.fail(exception.getCode(), exception.getMessage());
     }
 
     @ExceptionHandler(value = {SystemException.class})
