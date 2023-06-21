@@ -142,10 +142,11 @@ public class AuthingTokenInterceptor implements HandlerInterceptor  {
             }
             token.setRoles(roles);
 
-            JSONObject user = claims.get("user", JSONObject.class);
-            if (user == null) {
+            String userString = claims.get("user", String.class);
+            if (StringUtils.isEmpty(userString)) {
                 LOGGER.debug("Get [user] From Claims, But Empty... ");
             }
+            JSONObject user = JSONObject.parseObject(userString);
             token.setUser(user);
         } catch (Exception exception) {
             LOGGER.error("Get Token From Claims, But Exception... ");
