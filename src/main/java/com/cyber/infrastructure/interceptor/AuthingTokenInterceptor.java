@@ -1,6 +1,8 @@
 package com.cyber.infrastructure.interceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.cyber.domain.constant.AuthingTokenKey;
 import com.cyber.domain.constant.HttpResultCode;
 import com.cyber.domain.entity.AuthingToken;
@@ -142,7 +144,7 @@ public class AuthingTokenInterceptor implements HandlerInterceptor  {
             }
             token.setRoles(roles);
 
-            JSONObject user = claims.get("user", JSONObject.class);
+            JSONObject user = JSON.parseObject(JSON.toJSONString(claims.get("user")),new TypeReference<JSONObject>(){});
             if (user == null) {
                 LOGGER.debug("Get [user] From Claims, But Empty... ");
             }
